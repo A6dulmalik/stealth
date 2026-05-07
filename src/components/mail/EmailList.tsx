@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, Paperclip } from "lucide-react";
 import type { Email } from "./data";
 import { cn } from "@/lib/utils";
+
+type FilterTab = "all" | "unread" | "flagged";
 
 export function EmailList({
   emails, selectedId, onSelect, folder,
@@ -11,7 +14,15 @@ export function EmailList({
   onSelect: (id: string) => void;
   folder: string;
 }) {
-  const filtered = emails.filter((e) => folder === "starred" ? e.starred : e.folder === folder || folder === "inbox");
+  const [activeTab, setActiveTab] = useState<FilterTab>("all");
+  
+  const filtered = emails
+    .filter((e) => folder === "starred" ? e.starred : e.folder === folder || folder === "inbox")
+    .filter((e) => {
+      if (activeTab === "unread") return e.unread;
+      if (activeTab === "flagged") return e.starred;
+      return true;
+    });
 
   return (
     <section className="glass relative m-3 flex h-[calc(100vh-1.5rem-3.5rem-0.75rem)] w-full flex-col overflow-hidden rounded-2xl md:w-[360px] md:shrink-0">
@@ -21,12 +32,13 @@ export function EmailList({
           <p className="text-[11px] text-muted-foreground">{filtered.length} conversations</p>
         </div>
         <div className="flex items-center gap-1 rounded-lg border border-white/5 bg-white/[0.03] p-0.5 text-[11px]">
-          {["All", "Unread", "Flagged"].map((t, i) => (
+          {(["all", "unread", "flagged"] as const).map((t) => (
             <button
               key={t}
+              onClick={() => setActiveTab(t)}
               className={cn(
-                "rounded-md px-2.5 py-1 transition",
-                i === 0 ? "bg-white/[0.08] text-foreground" : "text-muted-foreground hover:text-foreground"
+                "rounded-md px-2.5 py-1 transition capitalize",
+                activeTab === t ? "bg-white/[0.08] text-foreground" : "text-muted-foreground hover:text-foreground"
               )}
             >
               {t}

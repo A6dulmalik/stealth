@@ -1,9 +1,28 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Command, Bell, Settings, Filter } from "lucide-react";
+import { Search, Command, Bell, Settings, Filter, Check, Paperclip, Calendar, User, LogOut, RefreshCw } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { NotificationsPanel } from "./NotificationsPanel";
 
-export function Topbar({ onOpenPalette }: { onOpenPalette: () => void }) {
+type TopbarProps = {
+  onOpenPalette: () => void;
+  onOpenSettings: () => void;
+  onShowToast: (message: string) => void;
+};
+
+export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarProps) {
   const [focused, setFocused] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    unreadOnly: false,
+    hasAttachments: false,
+    dateRange: "all" as "all" | "today" | "week" | "month",
+  });
+
+  const filterRef = useRef<HTMLDivElement>(null);
+  const accountRef = useRef<HTMLDivElement>(null);
 
   return (
     <header className="glass mx-3 mt-3 flex h-14 items-center gap-3 rounded-2xl px-3 md:mx-3">
@@ -29,19 +48,192 @@ export function Topbar({ onOpenPalette }: { onOpenPalette: () => void }) {
       </motion.div>
 
       <div className="ml-auto flex items-center gap-1">
-        <IconBtn label="Filter"><Filter className="h-4 w-4" /></IconBtn>
-        <IconBtn label="Notifications">
-          <span className="relative">
-            <Bell className="h-4 w-4" />
-            <span className="pulse-dot absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-[oklch(0.85_0.005_270)]" />
-          </span>
+        {/* Filter dropdown */}
+        <div ref={filterRef} className="relative">
+          <IconBtn 
+            label="Filter" 
+            onClick={() => setFilterOpen(!filterOpen)}
+            active={filterOpen || filters.unreadOnly || filters.hasAttachments || filters.dateRange !== "all"}
+          >
+            <Filter className="h-4 w-4" />
+          </IconBtn>
+          
+          <AnimatePresence>
+            {filterOpen && (
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setFilterOpen(false)}
+                  className="fixed inset-0 z-40"
+                />
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 28 }}
+                  className="glass-strong absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl p-2"
+                >
+                  <div className="mb-2 px-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                    Filters
+                  </div>
+                  
+                  <FilterToggle
+                    icon={Check}
+                    label="Unread only"
+                    checked={filters.unreadOnly}
+                    onChange={(v) => setFilters({ ...filters, unreadOnly: v })}
+                  />
+                  <FilterToggle
+                    icon={Paperclip}
+                    label="Has attachments"
+                    checked={filters.hasAttachments}
+                    onChange={(v) => setFilters({ ...filters, hasAttachments: v })}
+                  />
+                  
+                  <div className="my-2 border-t border-white/5" />
+                  
+                  <div className="mb-2 px-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                    Date range
+                  </div>
+                  
+                  {(["all", "today", "week", "month"] as const).map((range) => (
+                    <button
+                      key={range}
+                      onClick={() => setFilters({ ...filters, dateRange: range })}
+                      className={cn(
+                        "flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition",
+                        filters.dateRange === range
+                          ? "bg-white/[0.08] text-foreground"
+                          : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
+                      )}
+                    >
+                      <Calendar className="h-3.5 w-3.5" />
+                      <span className="capitalize">{range === "all" ? "All time" : range === "week" ? "This week" : range === "month" ? "This month" : "Today"}</span>
+                    </button>
+                  ))}
+                  
+                  {(filters.unreadOnly || filters.hasAttachments || filters.dateRange !== "all") && (
+                    <>
+                      <div className="my-2 border-t border-white/5" />
+                      <button
+                        onClick={() => setFilters({ unreadOnly: false, hasAttachments: false, dateRange: "all" })}
+                        className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-muted-foreground transition hover:bg-white/[0.04] hover:text-foreground"
+                      >
+                        <RefreshCw className="h-3.5 w-3.5" />
+                        Clear filters
+                      </button>
+                    </>
+                  )}
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Notifications */}
+        <div className="relative">
+          <IconBtn 
+            label="Notifications" 
+            onClick={() => setNotificationsOpen(!notificationsOpen)}
+            active={notificationsOpen}
+          >
+            <span className="relative">
+              <Bell className="h-4 w-4" />
+              <span className="pulse-dot absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-[oklch(0.85_0.005_270)]" />
+            </span>
+          </IconBtn>
+          
+          <NotificationsPanel 
+            open={notificationsOpen} 
+            onClose={() => setNotificationsOpen(false)} 
+          />
+        </div>
+
+        {/* Settings */}
+        <IconBtn label="Settings" onClick={onOpenSettings}>
+          <Settings className="h-4 w-4" />
         </IconBtn>
-        <IconBtn label="Settings"><Settings className="h-4 w-4" /></IconBtn>
+        
         <div className="mx-2 h-6 w-px bg-white/10" />
-        <button className="flex items-center gap-2 rounded-lg border border-white/5 bg-white/[0.04] px-2 py-1.5 text-xs text-foreground transition hover:bg-white/[0.08]">
-          <span className="h-5 w-5 rounded-full" style={{ background: "linear-gradient(135deg,#7a8290,#2b2b31)" }} />
-          <span className="hidden sm:inline">Personal</span>
-        </button>
+        
+        {/* Account menu */}
+        <div ref={accountRef} className="relative">
+          <button 
+            onClick={() => setAccountOpen(!accountOpen)}
+            className={cn(
+              "flex items-center gap-2 rounded-lg border border-white/5 bg-white/[0.04] px-2 py-1.5 text-xs text-foreground transition hover:bg-white/[0.08]",
+              accountOpen && "bg-white/[0.08]"
+            )}
+          >
+            <span className="h-5 w-5 rounded-full" style={{ background: "linear-gradient(135deg,#7a8290,#2b2b31)" }} />
+            <span className="hidden sm:inline">Personal</span>
+          </button>
+          
+          <AnimatePresence>
+            {accountOpen && (
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setAccountOpen(false)}
+                  className="fixed inset-0 z-40"
+                />
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 28 }}
+                  className="glass-strong absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl"
+                >
+                  {/* Account info */}
+                  <div className="border-b border-white/5 p-3">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#4d5560] to-[#232326] flex items-center justify-center">
+                        <span className="text-sm font-medium text-white/90">EN</span>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium text-foreground">Eve Navarro</p>
+                        <p className="truncate text-xs text-muted-foreground">eve@aether.app</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Menu items */}
+                  <div className="p-1">
+                    <AccountMenuItem 
+                      icon={User} 
+                      label="Profile" 
+                      onClick={() => {
+                        setAccountOpen(false);
+                        onOpenSettings();
+                      }} 
+                    />
+                    <AccountMenuItem 
+                      icon={RefreshCw} 
+                      label="Switch account" 
+                      onClick={() => {
+                        setAccountOpen(false);
+                        onShowToast("Account switching coming soon");
+                      }} 
+                    />
+                    <div className="my-1 border-t border-white/5" />
+                    <AccountMenuItem 
+                      icon={LogOut} 
+                      label="Sign out" 
+                      onClick={() => {
+                        setAccountOpen(false);
+                        onShowToast("Signed out successfully");
+                      }} 
+                    />
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -60,14 +252,68 @@ export function Topbar({ onOpenPalette }: { onOpenPalette: () => void }) {
   );
 }
 
-function IconBtn({ children, label }: { children: React.ReactNode; label: string }) {
+function IconBtn({ 
+  children, 
+  label, 
+  onClick, 
+  active 
+}: { 
+  children: React.ReactNode; 
+  label: string; 
+  onClick?: () => void;
+  active?: boolean;
+}) {
   return (
     <motion.button
       whileTap={{ scale: 0.92 }}
       aria-label={label}
-      className="rounded-lg p-2 text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+      onClick={onClick}
+      className={cn(
+        "rounded-lg p-2 text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground",
+        active && "bg-white/[0.06] text-foreground"
+      )}
     >
       {children}
     </motion.button>
+  );
+}
+
+function FilterToggle({ 
+  icon: Icon, 
+  label, 
+  checked, 
+  onChange 
+}: { 
+  icon: any; 
+  label: string; 
+  checked: boolean; 
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <button
+      onClick={() => onChange(!checked)}
+      className={cn(
+        "flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition",
+        checked
+          ? "bg-white/[0.08] text-foreground"
+          : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
+      )}
+    >
+      <Icon className="h-3.5 w-3.5" />
+      <span>{label}</span>
+      {checked && <Check className="ml-auto h-3.5 w-3.5" />}
+    </button>
+  );
+}
+
+function AccountMenuItem({ icon: Icon, label, onClick }: { icon: any; label: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+    >
+      <Icon className="h-4 w-4" />
+      {label}
+    </button>
   );
 }

@@ -8,6 +8,7 @@ import { EmailList } from "@/components/mail/EmailList";
 import { EmailView } from "@/components/mail/EmailView";
 import { Compose } from "@/components/mail/Compose";
 import { CommandPalette } from "@/components/mail/CommandPalette";
+import { SettingsModal } from "@/components/mail/SettingsModal";
 import { emails } from "@/components/mail/data";
 
 export const Route = createFileRoute("/")({
@@ -29,8 +30,15 @@ function MailApp() {
   const [composeOpen, setComposeOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [customFolder, setCustomFolder] = useState<string | null>(null);
 
   const selected = emails.find((e) => e.id === selectedId) ?? null;
+  
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 4000);
+  };
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
@@ -55,14 +63,23 @@ function MailApp() {
       <div className="flex">
         <Sidebar
           active={folder}
-          onSelect={setFolder}
+          onSelect={(f) => {
+            setFolder(f);
+            setCustomFolder(null);
+          }}
           collapsed={collapsed}
           onToggle={() => setCollapsed((v) => !v)}
           onCompose={() => setComposeOpen(true)}
+          customFolder={customFolder}
+          onSelectCustomFolder={setCustomFolder}
         />
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <Topbar onOpenPalette={() => setPaletteOpen(true)} />
+          <Topbar 
+            onOpenPalette={() => setPaletteOpen(true)} 
+            onOpenSettings={() => setSettingsOpen(true)}
+            onShowToast={showToast}
+          />
           <div className="flex min-w-0 flex-1">
             <EmailList emails={emails} selectedId={selectedId} onSelect={setSelectedId} folder={folder} />
             <EmailView email={selected} />
@@ -70,8 +87,23 @@ function MailApp() {
         </div>
       </div>
 
-      <Compose open={composeOpen} onClose={() => setComposeOpen(false)} />
-      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+      <Compose open={composeOpen} onClose={() => setComposeOpen(false)} onShowToast={showToast} />
+      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <CommandPalette 
+        open={paletteOpen} 
+        onClose={() => setPaletteOpen(false)}
+        onCompose={() => setComposeOpen(true)}
+        onNavigate={(f) => {
+          setFolder(f);
+          setCustomFolder(null);
+        }}
+        onArchive={() => {
+          if (selectedId) {
+            showToast("Thread archived");
+          }
+        }}
+        onOpenSettings={() => setSettingsOpen(true)}
+      />
 
       {/* Toast */}
       <AnimatePresence>
