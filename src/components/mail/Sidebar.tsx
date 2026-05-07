@@ -127,7 +127,7 @@ export function Sidebar({
         </div>
         {!collapsed && (
           <div className="flex flex-col leading-tight">
-            <span className="text-sm font-semibold tracking-tight silver-text">Stealth</span>
+            <span className="text-sm font-semibold tracking-tight silver-text">STEALTH</span>
             <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">mail protocol</span>
           </div>
         )}
@@ -273,7 +273,7 @@ export function Sidebar({
         {!collapsed && (
           <div className="min-w-0 flex-1 leading-tight">
             <div className="truncate text-xs font-medium text-foreground">Eve Navarro</div>
-            <div className="truncate text-[11px] text-muted-foreground">eve*stealth.xyz</div>
+            <div className="truncate text-[11px] text-muted-foreground">kryputh@stealth.me</div>
           </div>
         )}
         {!collapsed && <span className="pulse-dot ml-auto h-1.5 w-1.5 rounded-full bg-[oklch(0.85_0.005_270)]" />}
