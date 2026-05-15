@@ -143,7 +143,7 @@ function MailApp() {
           }}
           collapsed={collapsed}
           onToggle={() => setCollapsed((v) => !v)}
-          onCompose={() => setComposeOpen(true)}
+          onCompose={() => openCompose()}
           customFolder={customFolder}
           onSelectCustomFolder={setCustomFolder}
         />
