@@ -97,10 +97,13 @@ export function EmailView({
                     onClick={() => setReplyMenuOpen((open) => !open)}
                     className={cn(
                       "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs transition",
-                      replyMenuOpen ? "bg-white/[0.08] text-foreground" : "text-muted-foreground hover:bg-white/[0.06] hover:text-foreground"
+                      replyMenuOpen
+                        ? "bg-white/[0.08] text-foreground"
+                        : "text-muted-foreground hover:bg-white/[0.06] hover:text-foreground",
                     )}
                   >
-                    <Reply className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Reply</span>
+                    <Reply className="h-3.5 w-3.5" />{" "}
+                    <span className="hidden sm:inline">Reply</span>
                   </motion.button>
                   <AnimatePresence>
                     {replyMenuOpen && (
