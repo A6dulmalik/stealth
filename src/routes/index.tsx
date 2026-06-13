@@ -20,6 +20,7 @@ import {
   type MailFolder,
 } from "@/components/mail/data";
 import { usePreferences } from "@/features/preferences";
+import { CalendarWorkspace, useCalendar } from "@/features/calendar";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -52,7 +53,11 @@ function MailApp() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [customFolder, setCustomFolder] = useState<string | null>(null);
   const [filters, setFilters] = useState<MailFilters>(defaultMailFilters);
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [calendarEventId, setCalendarEventId] = useState<string | null>(null);
+  const [calendarCreateRequest, setCalendarCreateRequest] = useState(0);
   const { preferences, setPreferences } = usePreferences();
+  const calendar = useCalendar();
 
   const folderCounts = useMemo(
     () =>
@@ -131,7 +136,20 @@ function MailApp() {
       showToast(`${e.from} blocked and postage marked for refund`);
     },
     onShowToast: showToast,
-    onAddEvent: (e: Email) => showToast(`${e.event?.title ?? "Event"} added to your calendar`),
+    onAddEvent: (e: Email) => {
+      if (!e.event) return;
+      const event = calendar.addMailEvent(e.event, e.id);
+      showToast(`${event.title} added to your calendar`);
+      return event;
+    },
+    getCalendarEvent: (e: Email) =>
+      calendar.events.find((event) => event.sourceEmailId === e.id) ?? null,
+    onOpenCalendar: (eventId?: string) => {
+      setCalendarEventId(eventId ?? null);
+      setCalendarOpen(true);
+    },
+    onCalendarResponseChange: calendar.updateResponse,
+    onCalendarReminderChange: calendar.updateReminder,
   };
 
   const handleContextAction = (action: ContextAction, email: Email) => {
@@ -277,6 +295,17 @@ function MailApp() {
             <RightPanel
               email={selected}
               onAction={handleContextAction}
+              calendarEvents={calendar.visibleEvents}
+              calendars={calendar.calendars}
+              onOpenCalendar={(eventId) => {
+                setCalendarEventId(eventId ?? null);
+                setCalendarOpen(true);
+              }}
+              onCreateEvent={() => {
+                setCalendarEventId(null);
+                setCalendarOpen(true);
+                setCalendarCreateRequest((request) => request + 1);
+              }}
               onDraftReply={(email, prompt) =>
                 openCompose({
                   to: email.email,
@@ -329,6 +358,22 @@ function MailApp() {
           setFolder(email.folder);
           setSelectedId(email.id);
         }}
+      />
+      <CalendarWorkspace
+        open={calendarOpen}
+        onClose={() => setCalendarOpen(false)}
+        calendars={calendar.calendars}
+        events={calendar.events}
+        initialEventId={calendarEventId}
+        createRequest={calendarCreateRequest}
+        onSaveEvent={calendar.saveEvent}
+        onDeleteEvent={calendar.deleteEvent}
+        onDuplicateEvent={calendar.duplicateEvent}
+        onResponseChange={calendar.updateResponse}
+        onReminderChange={calendar.updateReminder}
+        onToggleCalendar={calendar.toggleCalendar}
+        onAddCalendar={calendar.addCalendar}
+        onShowToast={showToast}
       />
 
       {/* Toast */}

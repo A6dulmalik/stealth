@@ -21,7 +21,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { EventMailCard } from "@/features/calendar";
+import { EventMailCard, type CalendarEvent, type CalendarResponse } from "@/features/calendar";
 import { OTPCard, detectOtp } from "@/features/otp";
 import type { Email } from "./data";
 
@@ -35,7 +35,11 @@ export type EmailViewActions = {
   onApproveSender?: (email: Email) => void;
   onBlockSender?: (email: Email) => void;
   onShowToast?: (message: string) => void;
-  onAddEvent?: (email: Email) => void;
+  onAddEvent?: (email: Email) => CalendarEvent | void;
+  getCalendarEvent?: (email: Email) => CalendarEvent | null;
+  onOpenCalendar?: (eventId?: string) => void;
+  onCalendarResponseChange?: (eventId: string, response: CalendarResponse) => void;
+  onCalendarReminderChange?: (eventId: string, reminder: string) => void;
 };
 
 export function EmailView({
@@ -224,7 +228,14 @@ export function EmailView({
                 </div>
 
                 {email.event ? (
-                  <EventMailCard event={email.event} onAdd={() => actions.onAddEvent?.(email)} />
+                  <EventMailCard
+                    event={email.event}
+                    calendarEvent={actions.getCalendarEvent?.(email)}
+                    onAdd={() => actions.onAddEvent?.(email)}
+                    onOpen={actions.onOpenCalendar}
+                    onResponseChange={actions.onCalendarResponseChange}
+                    onReminderChange={actions.onCalendarReminderChange}
+                  />
                 ) : null}
 
                 <ProtocolStatus email={email} onShowToast={actions.onShowToast} />
