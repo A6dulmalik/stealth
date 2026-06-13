@@ -38,7 +38,13 @@ export type EmailViewActions = {
   onAddEvent?: (email: Email) => void;
 };
 
-export function EmailView({ email, actions = {} }: { email: Email | null; actions?: EmailViewActions }) {
+export function EmailView({
+  email,
+  actions = {},
+}: {
+  email: Email | null;
+  actions?: EmailViewActions;
+}) {
   const [replyMenuOpen, setReplyMenuOpen] = useState(false);
   const [quickReplyOpen, setQuickReplyOpen] = useState(false);
   const [quickReplyText, setQuickReplyText] = useState("");
@@ -65,7 +71,9 @@ export function EmailView({ email, actions = {} }: { email: Email | null; action
                 <Sparkles className="h-5 w-5 text-muted-foreground" />
               </div>
               <h3 className="text-sm font-medium text-foreground">No conversation selected</h3>
-              <p className="mt-1 text-xs text-muted-foreground">Pick a thread from the list to read it here.</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Pick a thread from the list to read it here.
+              </p>
             </div>
           </motion.div>
         ) : (
