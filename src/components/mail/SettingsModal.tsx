@@ -87,10 +87,31 @@ export function SettingsModal({
               {/* Content */}
               <div className="flex-1 p-5">
                 {activeTab === "account" && <AccountSettings />}
-                {activeTab === "appearance" && <AppearanceSettings />}
-                {activeTab === "notifications" && <NotificationSettings />}
+                {activeTab === "appearance" && (
+                  <AppearanceSettings preferences={preferences} onChange={onChange} />
+                )}
+                {activeTab === "notifications" && (
+                  <NotificationSettings preferences={preferences} onChange={onChange} />
+                )}
+                {activeTab === "inbox" && (
+                  <InboxSettings preferences={preferences} onChange={onChange} />
+                )}
                 {activeTab === "shortcuts" && <ShortcutSettings />}
               </div>
+            </div>
+            <div className="flex items-center justify-between border-t border-white/5 px-5 py-3">
+              <span className="text-[11px] text-muted-foreground">
+                Preferences are stored on this device.
+              </span>
+              <button
+                onClick={() => {
+                  onSave();
+                  onClose();
+                }}
+                className="rounded-lg bg-foreground px-4 py-2 text-xs font-semibold text-background transition hover:opacity-90"
+              >
+                Save changes
+              </button>
             </div>
           </motion.div>
         </>
