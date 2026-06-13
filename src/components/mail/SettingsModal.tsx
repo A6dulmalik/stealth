@@ -14,7 +14,19 @@ const tabs = [
 
 type Tab = (typeof tabs)[number]["id"];
 
-export function SettingsModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function SettingsModal({
+  open,
+  onClose,
+  preferences,
+  onChange,
+  onSave,
+}: {
+  open: boolean;
+  onClose: () => void;
+  preferences: UiPreferences;
+  onChange: (preferences: UiPreferences) => void;
+  onSave: () => void;
+}) {
   const [activeTab, setActiveTab] = useState<Tab>("account");
 
   return (
@@ -61,7 +73,7 @@ export function SettingsModal({ open, onClose }: { open: boolean; onClose: () =>
                           "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition",
                           isActive
                             ? "bg-white/[0.08] text-foreground"
-                            : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
+                            : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground",
                         )}
                       >
                         <Icon className="h-4 w-4" />
