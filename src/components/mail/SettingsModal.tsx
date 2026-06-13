@@ -170,9 +170,9 @@ function AppearanceSettings({
                 onClick={() => onChange({ ...preferences, theme: t as UiPreferences["theme"] })}
                 className={cn(
                   "rounded-lg border px-4 py-2 text-xs capitalize transition",
-                  theme === t
+                  preferences.theme === t
                     ? "border-white/20 bg-white/[0.08] text-foreground"
-                    : "border-white/5 text-muted-foreground hover:border-white/10"
+                    : "border-white/5 text-muted-foreground hover:border-white/10",
                 )}
               >
                 {t}
