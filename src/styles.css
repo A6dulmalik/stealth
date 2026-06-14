@@ -1,4 +1,5 @@
 @import "./features/design-system/styles/fonts.css";
+@import "./features/design-system/styles/interactions.css";
 @import "./features/design-system/styles/surfaces.css";
 @import "./features/design-system/styles/tokens.css";
 @import "tailwindcss" source(none);
@@ -50,54 +51,5 @@
   body {
     background: var(--background);
     color: var(--foreground);
-  }
-}
-
-@layer utilities {
-  /* Glass modal — for navbar dropdowns / floating panels.
-     Inspired by deep glass card with ambient gradient sheen. */
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: oklch(1 0 0 / 0.08);
-    border-radius: 999px;
-  }
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: oklch(1 0 0 / 0.18);
-  }
-
-  .glow-ring:focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 2px oklch(1 0 0 / 0.2),
-      0 0 24px oklch(1 0 0 / 0.08);
-  }
-
-  @keyframes pulse-dot {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 oklch(0.85 0.005 270 / 0.5);
-    }
-    50% {
-      box-shadow: 0 0 0 6px oklch(0.85 0.005 270 / 0);
-    }
-  }
-  .pulse-dot {
-    animation: pulse-dot 2s ease-out infinite;
-  }
-
-  @keyframes float-orb {
-    0%,
-    100% {
-      transform: translate(0, 0) scale(1);
-    }
-    50% {
-      transform: translate(30px, -20px) scale(1.05);
-    }
-  }
-  .float-orb {
-    animation: float-orb 12s ease-in-out infinite;
   }
 }
