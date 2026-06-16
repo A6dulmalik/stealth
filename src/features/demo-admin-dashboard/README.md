@@ -26,7 +26,7 @@ npx vitest run src/features/demo-admin-dashboard/__tests__/layout.test.ts
 ```
 
 The fixture data in `fixtures/demoData.ts` is deterministic, fake, and safe for public repository review.
-=======
+
 This folder is the implementation boundary for the admin dashboard used to populate and manage demo data in the Stealth demo inbox UI.
 
 Contributors working on demo-admin issues should keep new dashboard code, local state helpers, fixtures, validators, UI components, test utilities, and documentation inside:
