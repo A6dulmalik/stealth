@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { LandingScreen } from "@/components/landing/LandingScreen";
 import { AmbientBackground } from "@/components/mail/AmbientBackground";
 import { BulkConfirmDialog } from "@/components/mail/BulkConfirmDialog";
 import { Sidebar } from "@/components/mail/Sidebar";
@@ -12,7 +11,6 @@ import type { ComposeSubmission } from "@/components/mail/composeValidation";
 import { RightPanel, type ContextAction } from "@/components/mail/RightPanel";
 import { SettingsModal } from "@/components/mail/SettingsModal";
 import { AttachmentPreviewDrawer } from "@/components/mail/AttachmentPreviewDrawer";
-import { CommandPalette, type CommandId } from "@/features/command-palette";
 import {
   buildBulkActionPatch,
   getBulkActionConfirmation,
@@ -62,7 +60,6 @@ import {
   type SnoozeTarget,
 } from "@/features/snooze";
 import type { SnoozeState } from "@/components/mail/data";
-import { useFreighter } from "@/features/onboarding/useFreighter";
 import { useIsMobile } from "@/lib/use-media-query";
 
 export const Route = createFileRoute("/")({
@@ -88,7 +85,6 @@ function delay(ms: number) {
   return new Promise((resolve) => globalThis.setTimeout(resolve, ms));
 }
 
-function MailApp({ isDemoMode, onSignOut }: { isDemoMode?: boolean; onSignOut?: () => void }) {
 function MailApp({ isDemoMode }: { isDemoMode?: boolean }) {
   const [folder, setFolder] = useState<MailFolder>("inbox");
   const [emails, setEmails] = useState<Email[]>(initialEmails);
@@ -388,98 +384,6 @@ function MailApp({ isDemoMode }: { isDemoMode?: boolean }) {
       return;
     }
     showToast("Conversation summary refreshed");
-  };
-
-  const runCommand = (id: CommandId, email?: Email) => {
-    const target = email ?? selected;
-
-    if (id === "compose") {
-      openCompose();
-      return;
-    }
-
-    if (id === "go-inbox" || id === "go-starred" || id === "go-sent") {
-      const nextFolder = id === "go-inbox" ? "inbox" : id === "go-starred" ? "starred" : "sent";
-      setCustomFolder(null);
-      setFilters(defaultMailFilters);
-      setFolder(nextFolder);
-      return;
-    }
-
-    if (id === "open-settings") {
-      setSettingsSnapshot(preferences);
-      setSettingsOpen(true);
-      return;
-    }
-
-    if (id === "relay-diagnostics") {
-      setFolder("receipts");
-      setCustomFolder(null);
-      showToast("Relay diagnostics opened");
-      return;
-    }
-
-    if (!target) {
-      showToast("Select a message first", { tone: "danger" });
-      return;
-    }
-
-    setSelectedId(target.id);
-
-    switch (id) {
-      case "archive-thread":
-        handleArchive(target);
-        break;
-      case "approve-sender":
-        handleConvertSender(
-          {
-            emailId: target.id,
-            sender: target.from,
-            address: target.email,
-            currentPolicy: target.senderPolicy,
-          },
-          "allow",
-        );
-        break;
-      case "block-sender":
-        handleConvertSender(
-          {
-            emailId: target.id,
-            sender: target.from,
-            address: target.email,
-            currentPolicy: target.senderPolicy,
-          },
-          "block",
-        );
-        break;
-      case "quote-postage":
-        showToast(`Minimum postage for ${target.from}: ${preferences.minimumPostage} XLM`);
-        break;
-      case "inspect-proof": {
-        const proof = deriveProof(target);
-        if (navigator.clipboard?.writeText) {
-          void navigator.clipboard.writeText(proof).catch(() => undefined);
-        }
-        showToast(`Proof hash copied: ${proof}`);
-        break;
-      }
-      case "settle-delivery":
-        updateEmail(target.id, {
-          receiptState: "sent",
-          labels: [...(target.labels ?? []), "Settled"],
-        });
-        showToast(`Delivery settled for "${target.subject}"`, { tone: "success" });
-        break;
-      case "refund-postage":
-        updateEmail(target.id, {
-          folder: "spam",
-          labels: [...(target.labels ?? []), "Refunded"],
-        });
-        showToast(`Postage refunded for "${target.subject}"`, { tone: "success" });
-        break;
-      default:
-        break;
-    }
   };
 
   const handleComposeSubmit = (submission: ComposeSubmission) => {
