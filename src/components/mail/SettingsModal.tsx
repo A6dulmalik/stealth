@@ -1,4 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { X, User, Palette, Bell, Keyboard, ShieldCheck, CheckCheck } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import type { UiPreferences, ReceiptPreference } from "@/features/preferences";
 import {
   X,
   User,
@@ -26,6 +30,7 @@ const tabs = [
   { id: "appearance", label: "Appearance", icon: Palette },
   { id: "notifications", label: "Notifications", icon: Bell },
   { id: "inbox", label: "Inbox control", icon: ShieldCheck },
+  { id: "receipts", label: "Read receipts", icon: CheckCheck },
   { id: "security", label: "Security", icon: Lock },
   { id: "shortcuts", label: "Shortcuts", icon: Keyboard },
   { id: "audit", label: "Audit log", icon: ClipboardList },
@@ -119,6 +124,9 @@ export function SettingsModal({
                 )}
                 {activeTab === "inbox" && (
                   <InboxSettings preferences={preferences} onChange={onChange} />
+                )}
+                {activeTab === "receipts" && (
+                  <ReceiptSettings preferences={preferences} onChange={onChange} />
                 )}
                 {activeTab === "security" && <SecuritySettings />}
                 {activeTab === "shortcuts" && <ShortcutSettings />}
@@ -323,6 +331,79 @@ function InboxSettings({
           <span className="text-xs text-muted-foreground">XLM</span>
         </div>
       </label>
+    </div>
+  );
+}
+
+function ReceiptSettings({
+  preferences,
+  onChange,
+}: {
+  preferences: UiPreferences;
+  onChange: (preferences: UiPreferences) => void;
+}) {
+  const setReceipt = (type: keyof UiPreferences["receipts"], value: ReceiptPreference) => {
+    onChange({
+      ...preferences,
+      receipts: {
+        ...preferences.receipts,
+        [type]: value,
+      },
+    });
+  };
+
+  const receiptOptions: {
+    value: ReceiptPreference;
+    label: string;
+    description: string;
+  }[] = [
+    { value: "auto", label: "Automatic", description: "Send read receipt as soon as you open the message." },
+    { value: "manual", label: "Manual", description: "Ask before sending a read receipt." },
+    { value: "never", label: "Never", description: "Never send read receipts for this sender type." },
+  ];
+
+  const senderTypes = [
+    { key: "trusted" as const, label: "Trusted contacts", help: "Senders you've approved or added." },
+    { key: "unknown" as const, label: "Unknown senders", help: "Senders who haven't been verified or approved." },
+    { key: "paid" as const, label: "Paid requests", help: "Senders who paid postage to reach you." },
+    { key: "organizations" as const, label: "Organizations", help: "Verified organizations and businesses." },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-sm font-medium text-foreground">Read receipt settings</h3>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Control when read receipts are sent. You decide what senders see.
+        </p>
+      </div>
+      <div className="space-y-4">
+        {senderTypes.map((type) => (
+          <div key={type.key} className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-foreground">{type.label}</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground">{type.help}</p>
+            <div className="mt-2 flex gap-2">
+              {receiptOptions.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setReceipt(type.key, opt.value)}
+                  className={cn(
+                    "flex-1 rounded-lg border px-3 py-2 text-left transition",
+                    preferences.receipts[type.key] === opt.value
+                      ? "border-emerald-200/20 bg-emerald-200/[0.06]"
+                      : "border-white/10 bg-white/[0.025] hover:bg-white/[0.05]"
+                  )}
+                >
+                  <div className="text-[11px] font-medium text-foreground">{opt.label}</div>
+                  <div className="text-[10px] text-muted-foreground mt-0.5">{opt.description}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

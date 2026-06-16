@@ -18,6 +18,7 @@ import {
   Star,
   Table2,
   Trash2,
+  CheckCheck,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -43,6 +44,7 @@ export type EmailViewActions = {
   onOpenCalendar?: (eventId?: string) => void;
   onCalendarResponseChange?: (eventId: string, response: CalendarResponse) => void;
   onCalendarReminderChange?: (eventId: string, reminder: string) => void;
+  onSendReadReceipt?: (email: Email) => void;
 };
 
 export function EmailView({
@@ -260,6 +262,7 @@ export function EmailView({
                 ) : null}
 
                 <ProtocolStatus email={email} onShowToast={actions.onShowToast} />
+                <ReceiptStatus email={email} onSendReadReceipt={actions.onSendReadReceipt} />
 
                 {email.folder === "requests" ? (
                   <SenderRequest
@@ -401,6 +404,49 @@ function ProtocolStatus({
       </button>
     </div>
   );
+}
+
+function ReceiptStatus({
+  email,
+  onSendReadReceipt,
+}: {
+  email: Email;
+  onSendReadReceipt?: (email: Email) => void;
+}) {
+  if (!email.receiptState || email.receiptState === "none") {
+    return null;
+  }
+
+  if (email.receiptState === "sent") {
+    return (
+      <div className="mt-3 flex items-center gap-2 rounded-lg border border-emerald-200/15 bg-emerald-200/[0.03] px-3 py-2">
+        <CheckCheck className="h-4 w-4 text-emerald-300" />
+        <span className="text-xs text-foreground">Read receipt sent</span>
+      </div>
+    );
+  }
+
+  if (email.receiptState === "pending") {
+    return (
+      <div className="mt-3 flex items-center gap-3 rounded-lg border border-amber-200/15 bg-amber-200/[0.03] px-3 py-2">
+        <CheckCheck className="h-4 w-4 text-amber-200" />
+        <div className="flex-1">
+          <div className="text-xs font-medium text-foreground">Read receipt pending</div>
+          <div className="text-[11px] text-muted-foreground">Send a read receipt to let them know you've seen this</div>
+        </div>
+        {onSendReadReceipt && (
+          <button
+            onClick={() => onSendReadReceipt(email)}
+            className="rounded-md bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background transition hover:opacity-90"
+          >
+            Send receipt
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  return null;
 }
 
 function SenderRequest({

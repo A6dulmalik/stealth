@@ -246,6 +246,10 @@ function MailApp() {
     },
     onCalendarResponseChange: calendar.updateResponse,
     onCalendarReminderChange: calendar.updateReminder,
+    onSendReadReceipt: (e: Email) => {
+      updateEmail(e.id, { receiptState: "sent" });
+      showToast("Read receipt sent");
+    },
   };
 
   const handleContextAction = (action: ContextAction, email: Email) => {
