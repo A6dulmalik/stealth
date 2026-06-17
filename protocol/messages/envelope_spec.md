@@ -40,6 +40,7 @@ The envelope is a JSON object with two top-level fields: `payload` and `signatur
 ### Fields
 
 #### Payload
+
 - `version` (string): The envelope format version (e.g. `"v1"`).
 - `sender` (string): Stellar G-address of the sender.
 - `recipient` (string): Stellar G-address of the recipient.
@@ -58,6 +59,7 @@ The envelope is a JSON object with two top-level fields: `payload` and `signatur
 - `critical` (array of strings, optional): List of mandatory header names.
 
 #### Signature
+
 - `scheme` (string): The signature scheme (e.g., `"Ed25519"`).
 - `value` (string): Hex-encoded signature bytes (128 hex characters for Ed25519).
 
@@ -68,12 +70,14 @@ The envelope is a JSON object with two top-level fields: `payload` and `signatur
 To verify the signature, the `payload` object must be serialized to an unambiguous, canonical byte representation. Stealth uses the **JSON Canonicalization Scheme (JCS)** as defined in [RFC 8785](https://tools.ietf.org/html/rfc8785).
 
 Key JCS rules:
+
 1. Object keys are sorted lexicographically by their UTF-16 code units.
 2. No unnecessary whitespace (e.g. spaces, tab characters, newlines) is included around structural delimiters (`:`, `,`, `{`, `}`, `[`, `]`).
 3. Strings are enclosed in double quotes (`"`), and standard JSON escaping is applied uniformly.
 4. Boolean values are serialized as `true` or `false`, and null is `null`.
 
 ### Signature Coverage
+
 The cryptographic signature covers the canonicalized byte representation of the `payload` object.
 
 ```text
@@ -86,5 +90,5 @@ signature = sign(private_key, jcs(payload))
 
 To allow safe feature updates, the envelope is extensible.
 
-1. **Unknown Optional Fields**: An implementation may ignore any key in the `payload` that is not defined in this specification, *unless* it is designated as critical.
-2. **Unknown Mandatory Fields**: If a key name is listed in the `critical` array, the recipient implementation *must* recognize and validate that field. If the parser encounters a field in `critical` that it does not recognize, validation must immediately fail (fail closed).
+1. **Unknown Optional Fields**: An implementation may ignore any key in the `payload` that is not defined in this specification, _unless_ it is designated as critical.
+2. **Unknown Mandatory Fields**: If a key name is listed in the `critical` array, the recipient implementation _must_ recognize and validate that field. If the parser encounters a field in `critical` that it does not recognize, validation must immediately fail (fail closed).
