@@ -31,10 +31,7 @@ export function versionToNumber(version: DatasetVersion | string): number {
  * Compares two versions.
  * Returns: -1 if v1 < v2, 0 if v1 === v2, 1 if v1 > v2
  */
-export function compareVersions(
-  v1: DatasetVersion | string,
-  v2: DatasetVersion | string,
-): number {
+export function compareVersions(v1: DatasetVersion | string, v2: DatasetVersion | string): number {
   const n1 = versionToNumber(v1);
   const n2 = versionToNumber(v2);
   if (n1 < n2) return -1;
@@ -138,11 +135,7 @@ export class MigrationRegistry {
   /**
    * Check if a migration path exists from source to target version.
    */
-  canMigrate(
-    fromVersion: string,
-    toVersion: string,
-    chain: Set<string> = new Set(),
-  ): boolean {
+  canMigrate(fromVersion: string, toVersion: string, chain: Set<string> = new Set()): boolean {
     if (fromVersion === toVersion) return true;
 
     const key = `${fromVersion}->${toVersion}`;
