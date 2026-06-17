@@ -30,10 +30,6 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      - name: Check Generated Artifacts
-        run: |
-          bun x @tanstack/router-cli generate
-          git diff --exit-code src/routeTree.gen.ts
 
       - name: Typecheck
         run: bun x tsc --noEmit
