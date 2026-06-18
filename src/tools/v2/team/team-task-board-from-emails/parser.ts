@@ -29,7 +29,7 @@ function extractAssignee(text: string, knownNames: string[]): string | null {
   for (const name of knownNames) {
     const pattern = new RegExp(
       `\\b${name}\\b.{0,40}(needs? to|should|will|handle)|(assigning to\\s+${name})`,
-      "i"
+      "i",
     );
     if (pattern.test(text)) return name;
   }
@@ -40,16 +40,14 @@ function extractNames(emails: EmailFixture[]): string[] {
   const raw = emails.flatMap((e) => [e.from, ...e.to]);
   return [
     ...new Set(
-      raw
-        .map((addr) => addr.split("@")[0])
-        .map((n) => n.charAt(0).toUpperCase() + n.slice(1))
+      raw.map((addr) => addr.split("@")[0]).map((n) => n.charAt(0).toUpperCase() + n.slice(1)),
     ),
   ];
 }
 
 function parseEmail(
   email: EmailFixture,
-  knownNames: string[]
+  knownNames: string[],
 ): { tasks: Task[]; error: ParseError | null } {
   const lines = email.body
     .split("\n")
