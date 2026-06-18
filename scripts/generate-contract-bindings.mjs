@@ -24,6 +24,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { execFileSync } from "child_process";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -388,10 +389,13 @@ for (const name of CONTRACTS) {
   const code = emitClient(spec, name, xdrEntries);
   const outPath = join(OUT_DIR, `${name}.ts`);
   writeFileSync(outPath, code, "utf8");
+  execFileSync("npx", ["prettier", "--write", outPath], { stdio: "inherit" });
   console.log(`Generated ${outPath}`);
 }
 
 // Write barrel index
 const index = CONTRACTS.map((c) => `export * as ${camelCase(c)} from "./${c}";`).join("\n") + "\n";
-writeFileSync(join(OUT_DIR, "index.ts"), index, "utf8");
-console.log(`Generated ${join(OUT_DIR, "index.ts")}`);
+const indexPath = join(OUT_DIR, "index.ts");
+writeFileSync(indexPath, index, "utf8");
+execFileSync("npx", ["prettier", "--write", indexPath], { stdio: "inherit" });
+console.log(`Generated ${indexPath}`);

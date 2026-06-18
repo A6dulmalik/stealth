@@ -16,12 +16,12 @@ the client. CI detects any divergence between the spec and the committed files.
 
 ## Artifacts
 
-| Path | Role |
-|------|------|
-| `contracts/soroban/{name}/spec.json` | Contract interface definition (structs, enums, errors, functions) |
-| `scripts/generate-contract-bindings.mjs` | Generator — reads spec.json, emits TypeScript |
-| `src/services/stellar/contracts/{name}.ts` | Generated typed client (do not edit by hand) |
-| `src/services/stellar/contracts/index.ts` | Generated barrel re-export |
+| Path                                       | Role                                                              |
+| ------------------------------------------ | ----------------------------------------------------------------- |
+| `contracts/soroban/{name}/spec.json`       | Contract interface definition (structs, enums, errors, functions) |
+| `scripts/generate-contract-bindings.mjs`   | Generator — reads spec.json, emits TypeScript                     |
+| `src/services/stellar/contracts/{name}.ts` | Generated typed client (do not edit by hand)                      |
+| `src/services/stellar/contracts/index.ts`  | Generated barrel re-export                                        |
 
 ### Contracts covered
 
@@ -109,16 +109,16 @@ git commit -m "chore: sync contract bindings to generator output"
 Each generated `parse{Contract}Error(code)` returns a typed enum variant or
 `undefined`. UI layers should map these variants to actionable states:
 
-| Contract | Error | UI state |
-|----------|-------|----------|
-| Policies | `InvalidPostage` | "Postage amount is invalid" |
+| Contract | Error                  | UI state                                                  |
+| -------- | ---------------------- | --------------------------------------------------------- |
+| Policies | `InvalidPostage`       | "Postage amount is invalid"                               |
 | Policies | `UnauthorizedDelegate` | "You are not authorized to act on behalf of this mailbox" |
-| Postage | `DuplicateMessage` | "Message already has postage attached" |
-| Postage | `PostageNotFound` | "No postage record found for this message" |
-| Postage | `AlreadyResolved` | "Postage has already been settled or refunded" |
-| Postage | `NotExpired` | "Postage window has not expired yet" |
-| Postage | `DisputeUnavailable` | "Dispute window has passed" |
-| Receipts | `DuplicateReceipt` | "Delivery already recorded for this message" |
-| Receipts | `ReceiptNotFound` | "No delivery record found" |
-| Receipts | `AlreadyRead` | "Message already marked as read" |
-| Receipts | `CommitmentMismatch` | "Payload hash does not match the delivery commitment" |
+| Postage  | `DuplicateMessage`     | "Message already has postage attached"                    |
+| Postage  | `PostageNotFound`      | "No postage record found for this message"                |
+| Postage  | `AlreadyResolved`      | "Postage has already been settled or refunded"            |
+| Postage  | `NotExpired`           | "Postage window has not expired yet"                      |
+| Postage  | `DisputeUnavailable`   | "Dispute window has passed"                               |
+| Receipts | `DuplicateReceipt`     | "Delivery already recorded for this message"              |
+| Receipts | `ReceiptNotFound`      | "No delivery record found"                                |
+| Receipts | `AlreadyRead`          | "Message already marked as read"                          |
+| Receipts | `CommitmentMismatch`   | "Payload hash does not match the delivery commitment"     |
