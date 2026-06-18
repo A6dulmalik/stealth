@@ -10,10 +10,12 @@ import {
   Paperclip,
   PieChart,
   Shield,
+  Target,
   Users,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CAMPAIGN_TEMPLATES } from "./fixtures/campaignFixtures";
 import type {
   DashboardNavItem,
   DashboardSection,
