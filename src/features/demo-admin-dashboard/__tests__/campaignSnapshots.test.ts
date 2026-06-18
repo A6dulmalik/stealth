@@ -26,13 +26,13 @@ const mockStorage = (() => {
 })();
 
 function setWindowStorage() {
-  global.window = { localStorage: mockStorage } as unknown as Window & typeof globalThis;
-  global.localStorage = mockStorage as unknown as Storage;
+  (global as any).window = { localStorage: mockStorage } as unknown as Window & typeof globalThis;
+  (global as any).localStorage = mockStorage as unknown as Storage;
 }
 
 function clearWindowStorage() {
-  delete (global as unknown as { window?: unknown }).window;
-  delete (global as unknown as { localStorage?: unknown }).localStorage;
+  delete (global as any).window;
+  delete (global as any).localStorage;
 }
 
 describe("Campaign Snapshots Fixtures and Helper logic", () => {

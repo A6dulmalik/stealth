@@ -50,29 +50,9 @@ export type DashboardSection =
   | "events"
   | "templates"
   | "campaigns"
-  | "analytics"
-  | "tags"
-  | "audit";
-
-export interface Persona {
-  id: string;
-  name: string;
-  email: string;
-  stellarAddress: string;
-  avatar: string;
-}
-
-export interface Campaign {
-  id: string;
-  name: string;
-  description: string;
-  tags: string[];
-  createdAt: string;
-  updatedAt: string;
-  owner: Persona;
-  reviewer: Persona;
-  lastEditor: Persona;
-}
+  | "timeline"
+  | "audit"
+  | "analytics";
 
 /** Props passed to the dashboard shell. */
 export interface DemoAdminDashboardProps {
@@ -96,6 +76,8 @@ export type PresetId =
   | "paid-sender-request"
   | "conference-pass"
   | "encrypted-payload";
+  | "paid-sender-request"
+  | "receipt-settlement";
 
 export interface PresetAccount {
   name: string;
@@ -106,7 +88,7 @@ export interface PresetAccount {
     nodeUri: string;
     latency: string;
     signatureScheme: string;
-    status: "verified" | "pending" | "failed" | "pending_approval";
+    status: "verified" | "pending" | "failed";
     owner: string;
   };
 }
@@ -133,7 +115,7 @@ export interface PresetMail {
     contractAddress: string;
     latency: string;
     signature: string;
-    postageStatus: "pending" | "settled" | "refunded" | "pending_approval" | "approved";
+    postageStatus: "pending" | "settled" | "refunded";
   };
 }
 
@@ -187,12 +169,22 @@ export interface DemoItem {
   description: string;
 }
 
-export type AdminRecordStatus = "active" | "invited" | "suspended";
-
-export interface AdminDemoRecord {
+export interface Persona {
   id: string;
   name: string;
-  address: string;
-  role: string;
-  status: AdminRecordStatus;
+  email: string;
+  stellarAddress: string;
+  avatar: string;
+}
+
+export interface Campaign {
+  id: string;
+  name: string;
+  description: string;
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+  owner: Persona;
+  reviewer: Persona;
+  lastEditor: Persona;
 }
