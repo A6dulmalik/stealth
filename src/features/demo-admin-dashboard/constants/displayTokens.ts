@@ -267,6 +267,90 @@ export function getPhaseToken(kind: string): DisplayToken {
   );
 }
 
+export const MILESTONE_STATUS_TOKENS: Record<
+  "pending" | "resolved" | "overdue" | "skipped",
+  DisplayToken
+> = {
+  pending: {
+    bg: "bg-amber-500/10",
+    text: "text-amber-400",
+    border: "border-amber-500/20",
+    label: "Pending",
+  },
+  resolved: {
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-400",
+    border: "border-emerald-500/20",
+    label: "Resolved",
+  },
+  overdue: {
+    bg: "bg-rose-500/10",
+    text: "text-rose-400",
+    border: "border-rose-500/20",
+    label: "Overdue",
+  },
+  skipped: {
+    bg: "bg-slate-500/10",
+    text: "text-slate-400",
+    border: "border-slate-500/20",
+    label: "Skipped",
+  },
+};
+
+export const SCHEDULED_SEND_STATUS_TOKENS: Record<
+  "pending" | "sent" | "failed" | "cancelled",
+  DisplayToken
+> = {
+  pending: {
+    bg: "bg-amber-500/10",
+    text: "text-amber-400",
+    border: "border-amber-500/20",
+    label: "Pending",
+  },
+  sent: {
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-400",
+    border: "border-emerald-500/20",
+    label: "Sent",
+  },
+  failed: {
+    bg: "bg-rose-500/10",
+    text: "text-rose-400",
+    border: "border-rose-500/20",
+    label: "Failed",
+  },
+  cancelled: {
+    bg: "bg-slate-500/10",
+    text: "text-slate-400",
+    border: "border-slate-500/20",
+    label: "Cancelled",
+  },
+};
+
+export function getMilestoneStatusToken(status: string): DisplayToken {
+  const key = status as keyof typeof MILESTONE_STATUS_TOKENS;
+  return (
+    MILESTONE_STATUS_TOKENS[key] ?? {
+      bg: "bg-white/[0.04]",
+      text: "text-muted-foreground",
+      border: "border-white/[0.08]",
+      label: status,
+    }
+  );
+}
+
+export function getSendStatusToken(status: string): DisplayToken {
+  const key = status as keyof typeof SCHEDULED_SEND_STATUS_TOKENS;
+  return (
+    SCHEDULED_SEND_STATUS_TOKENS[key] ?? {
+      bg: "bg-white/[0.04]",
+      text: "text-muted-foreground",
+      border: "border-white/[0.08]",
+      label: status,
+    }
+  );
+}
+
 export function getMilestoneToken(kind: string): DisplayToken {
   const key = kind as keyof typeof MILESTONE_KIND_TOKENS;
   return (

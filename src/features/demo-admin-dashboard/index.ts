@@ -168,6 +168,10 @@ export {
 } from "./proofFormatting";
 export { demoProofRecords } from "./fixtures/proofRecordFixtures";
 
+// Campaign Timeline panel (issue #261)
+export { CampaignTimelinePanel } from "./components/CampaignTimelinePanel";
+export { isOverdue, isImminent } from "./components/CampaignTimelinePanel";
+
 // Campaign Timeline (issue #260): types, fixtures, helpers, display tokens.
 export type {
   CampaignPhase,
@@ -200,8 +204,12 @@ export {
 export {
   CAMPAIGN_PHASE_TOKENS,
   getMilestoneToken,
+  getMilestoneStatusToken,
   getPhaseToken,
+  getSendStatusToken,
   MILESTONE_KIND_TOKENS,
+  MILESTONE_STATUS_TOKENS,
+  SCHEDULED_SEND_STATUS_TOKENS,
 } from "./constants/displayTokens";
 
 // Draft dataset admin store (issue #172): reducer, selectors, hook, types, fixture.
