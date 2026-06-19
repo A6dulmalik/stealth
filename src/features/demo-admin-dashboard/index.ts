@@ -56,8 +56,26 @@ export {
 } from "./constants/displayTokens";
 
 export { CampaignTagManager } from "./components/CampaignTagManager";
+export { CampaignListTable } from "./components/CampaignListTable";
+export type { CampaignListTableProps } from "./components/CampaignListTable";
 export { MockPublishPanel } from "./components/MockPublishPanel";
 export type { MockPublishPanelProps } from "./components/MockPublishPanel";
+export {
+  buildCampaignListRows,
+  clearCampaignSelection,
+  defaultCampaignListSort,
+  nextCampaignListSort,
+  selectAllCampaigns,
+  summarizeCampaignSelection,
+  toggleCampaignSelection,
+} from "./campaignListTable";
+export type {
+  CampaignListRow,
+  CampaignListSelectionSummary,
+  CampaignListSort,
+  CampaignListSortDirection,
+  CampaignListSortKey,
+} from "./campaignListTable";
 export {
   canRetryMockPublish,
   canRollbackMockPublish,
