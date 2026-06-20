@@ -11,15 +11,15 @@ apply reusable response templates ("macros") with variable interpolation.
 
 ## Table of contents
 
-1. [Purpose](#1-purpose)  
-2. [Folder structure](#2-folder-structure)  
-3. [Setup](#3-setup)  
-4. [Usage](#4-usage)  
-5. [Fixtures](#5-fixtures)  
-6. [Running tests](#6-running-tests)  
-7. [Known limitations](#7-known-limitations)  
-8. [OSS reviewer notes](#8-oss-reviewer-notes)  
-9. [Integration roadmap](#9-integration-roadmap)  
+1. [Purpose](#1-purpose)
+2. [Folder structure](#2-folder-structure)
+3. [Setup](#3-setup)
+4. [Usage](#4-usage)
+5. [Fixtures](#5-fixtures)
+6. [Running tests](#6-running-tests)
+7. [Known limitations](#7-known-limitations)
+8. [OSS reviewer notes](#8-oss-reviewer-notes)
+9. [Integration roadmap](#9-integration-roadmap)
 
 ---
 
@@ -106,7 +106,7 @@ import { FIXTURE_MACROS } from "./fixtures/macros.fixture";
 
 function MacroPanel() {
   const { filteredMacros, addMacro, useMacro, setSearchOptions } = useMacros({
-    seedMacros: FIXTURE_MACROS,  // optional — seeds when storage is empty
+    seedMacros: FIXTURE_MACROS, // optional — seeds when storage is empty
   });
 
   return (
@@ -141,11 +141,11 @@ macro, so the UI can prompt the agent to fill them in.
 `fixtures/macros.fixture.ts` exports pre-built macro objects for use in tests
 and development. No network or database access is needed.
 
-| Export | Description |
-|--------|-------------|
-| `FIXTURE_MACROS` | 8 macros across all 6 categories |
-| `FIXTURE_MACRO_NO_VARS` | Body with no variable tokens |
-| `FIXTURE_MACRO_WITH_VARS` | Body with 3 variable tokens |
+| Export                    | Description                      |
+| ------------------------- | -------------------------------- |
+| `FIXTURE_MACROS`          | 8 macros across all 6 categories |
+| `FIXTURE_MACRO_NO_VARS`   | Body with no variable tokens     |
+| `FIXTURE_MACRO_WITH_VARS` | Body with 3 variable tokens      |
 
 ```ts
 import { FIXTURE_MACROS } from "./fixtures/macros.fixture";
@@ -173,14 +173,14 @@ coverage targets, and a description of every test case.
 
 ## 7. Known limitations
 
-| Limitation | Detail |
-|------------|--------|
-| localStorage only | No sync across tabs. Tab isolation is fine for V1. |
-| No server-side storage | Macros are local to the browser. Cloud sync is a V2 concern. |
-| Hook not unit-tested | `useMacros.ts` wraps the fully-tested service layer. Full hook tests require `@testing-library/react`, which is not in devDeps yet. |
-| No UI component | The component layer is planned in a separate issue. |
-| No conflict resolution | If two agents edit the same macro name, last write wins. |
-| Max body length 4,000 chars | Enforced by `validateMacroInput`. Configurable in a future issue. |
+| Limitation                  | Detail                                                                                                                              |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| localStorage only           | No sync across tabs. Tab isolation is fine for V1.                                                                                  |
+| No server-side storage      | Macros are local to the browser. Cloud sync is a V2 concern.                                                                        |
+| Hook not unit-tested        | `useMacros.ts` wraps the fully-tested service layer. Full hook tests require `@testing-library/react`, which is not in devDeps yet. |
+| No UI component             | The component layer is planned in a separate issue.                                                                                 |
+| No conflict resolution      | If two agents edit the same macro name, last write wins.                                                                            |
+| Max body length 4,000 chars | Enforced by `validateMacroInput`. Configurable in a future issue.                                                                   |
 
 ---
 
@@ -206,9 +206,9 @@ coverage targets, and a description of every test case.
 
 When a future integration issue is opened, the following adapter points are ready:
 
-| Hook / function | Integration point |
-|-----------------|-------------------|
-| `useMacros({ storageAdapter })` | Swap in a server-backed adapter |
-| `createMacro / updateMacro` | POST/PATCH to a REST or GraphQL endpoint |
-| `interpolateMacro` | Called in the compose window before message send |
-| `extractVariables` | Drives the variable-fill prompt in the compose UI |
+| Hook / function                 | Integration point                                 |
+| ------------------------------- | ------------------------------------------------- |
+| `useMacros({ storageAdapter })` | Swap in a server-backed adapter                   |
+| `createMacro / updateMacro`     | POST/PATCH to a REST or GraphQL endpoint          |
+| `interpolateMacro`              | Called in the compose window before message send  |
+| `extractVariables`              | Drives the variable-fill prompt in the compose UI |

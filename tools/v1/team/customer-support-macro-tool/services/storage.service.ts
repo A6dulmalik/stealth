@@ -47,9 +47,7 @@ export const localStorageAdapter: StorageAdapter = {
 };
 
 /** In-memory adapter for tests and SSR environments. */
-export function createInMemoryAdapter(
-  initial: Record<string, string> = {},
-): StorageAdapter {
+export function createInMemoryAdapter(initial: Record<string, string> = {}): StorageAdapter {
   const store = new Map<string, string>(Object.entries(initial));
   return {
     getItem: (key) => store.get(key) ?? null,
@@ -81,10 +79,7 @@ export function loadMacros(adapter: StorageAdapter = localStorageAdapter): Macro
 /**
  * Persists the macro list to storage.
  */
-export function saveMacros(
-  macros: Macro[],
-  adapter: StorageAdapter = localStorageAdapter,
-): void {
+export function saveMacros(macros: Macro[], adapter: StorageAdapter = localStorageAdapter): void {
   adapter.setItem(STORAGE_KEY, JSON.stringify(macros));
 }
 

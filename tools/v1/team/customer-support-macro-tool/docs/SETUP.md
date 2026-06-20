@@ -2,9 +2,9 @@
 
 ## Prerequisites
 
-| Requirement | Version | Notes |
-|-------------|---------|-------|
-| Node.js     | ≥ 18    | LTS recommended |
+| Requirement | Version | Notes             |
+| ----------- | ------- | ----------------- |
+| Node.js     | ≥ 18    | LTS recommended   |
 | npm         | ≥ 9     | Bundled with Node |
 
 No additional tools are needed. This tool uses only the project-level

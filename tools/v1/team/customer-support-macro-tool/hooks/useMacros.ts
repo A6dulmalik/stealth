@@ -108,19 +108,14 @@ export function useMacros(options: UseMacrosOptions = {}): UseMacrosReturn {
 
   // --- CRUD ---
 
-  const addMacro = useCallback(
-    (input: MacroCreateInput): Macro => {
-      const macro = createMacro(input);
-      setMacros((prev) => [macro, ...prev]);
-      return macro;
-    },
-    [],
-  );
+  const addMacro = useCallback((input: MacroCreateInput): Macro => {
+    const macro = createMacro(input);
+    setMacros((prev) => [macro, ...prev]);
+    return macro;
+  }, []);
 
   const editMacro = useCallback((id: string, changes: MacroUpdateInput) => {
-    setMacros((prev) =>
-      prev.map((m) => (m.id === id ? updateMacro(m, changes) : m)),
-    );
+    setMacros((prev) => prev.map((m) => (m.id === id ? updateMacro(m, changes) : m)));
   }, []);
 
   const removeMacro = useCallback((id: string) => {
@@ -129,9 +124,7 @@ export function useMacros(options: UseMacrosOptions = {}): UseMacrosReturn {
 
   const toggleFavorite = useCallback((id: string) => {
     setMacros((prev) =>
-      prev.map((m) =>
-        m.id === id ? updateMacro(m, { isFavorite: !m.isFavorite }) : m,
-      ),
+      prev.map((m) => (m.id === id ? updateMacro(m, { isFavorite: !m.isFavorite }) : m)),
     );
   }, []);
 
@@ -142,9 +135,7 @@ export function useMacros(options: UseMacrosOptions = {}): UseMacrosReturn {
       const macro = macros.find((m) => m.id === id);
       if (!macro) return null;
       // Record usage
-      setMacros((prev) =>
-        prev.map((m) => (m.id === id ? recordMacroUsage(m) : m)),
-      );
+      setMacros((prev) => prev.map((m) => (m.id === id ? recordMacroUsage(m) : m)));
       return interpolateMacro(macro.body, variables);
     },
     [macros],
@@ -152,12 +143,9 @@ export function useMacros(options: UseMacrosOptions = {}): UseMacrosReturn {
 
   // --- Search & sort ---
 
-  const setSearchOptions = useCallback(
-    (opts: Partial<MacroSearchOptions>) => {
-      setSearchOptionsState((prev) => ({ ...prev, ...opts }));
-    },
-    [],
-  );
+  const setSearchOptions = useCallback((opts: Partial<MacroSearchOptions>) => {
+    setSearchOptionsState((prev) => ({ ...prev, ...opts }));
+  }, []);
 
   const setSortKey = useCallback((key: MacroSortKey) => {
     setSortKeyState(key);
@@ -170,8 +158,7 @@ export function useMacros(options: UseMacrosOptions = {}): UseMacrosReturn {
   // --- Validation ---
 
   const validate = useCallback(
-    (input: Partial<MacroCreateInput>): MacroValidationError[] =>
-      validateMacroInput(input),
+    (input: Partial<MacroCreateInput>): MacroValidationError[] => validateMacroInput(input),
     [],
   );
 

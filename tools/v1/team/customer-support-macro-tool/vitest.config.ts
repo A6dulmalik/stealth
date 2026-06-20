@@ -11,9 +11,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     name: "customer-support-macro-tool",
-    include: [
-      "tools/v1/team/customer-support-macro-tool/tests/**/*.test.ts",
-    ],
+    include: ["tools/v1/team/customer-support-macro-tool/tests/**/*.test.ts"],
     exclude: ["**/node_modules/**"],
     environment: "node",
     globals: false,

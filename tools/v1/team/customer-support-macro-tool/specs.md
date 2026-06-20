@@ -30,13 +30,13 @@ customer-support-macro-tool/
 
 ## Required issue categories
 
-| Category | Status |
-|----------|--------|
-| Architecture | Addressed — service layer, storage adapter pattern, hook interface |
-| Feature | Addressed — CRUD, search, sort, interpolation, validation, usage tracking |
-| UI and accessibility | Deferred — separate UI issue |
-| Security and performance | Addressed — input validation, no external deps, immutable patterns |
-| Testing and documentation | ✅ Completed — this issue |
+| Category                  | Status                                                                    |
+| ------------------------- | ------------------------------------------------------------------------- |
+| Architecture              | Addressed — service layer, storage adapter pattern, hook interface        |
+| Feature                   | Addressed — CRUD, search, sort, interpolation, validation, usage tracking |
+| UI and accessibility      | Deferred — separate UI issue                                              |
+| Security and performance  | Addressed — input validation, no external deps, immutable patterns        |
+| Testing and documentation | ✅ Completed — this issue                                                 |
 
 ## Macro categories
 

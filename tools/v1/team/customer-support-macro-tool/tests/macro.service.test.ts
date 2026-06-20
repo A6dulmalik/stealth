@@ -189,10 +189,10 @@ describe("recordMacroUsage", () => {
 
 describe("interpolateMacro", () => {
   it("replaces known variables with their values", () => {
-    const result = interpolateMacro(
-      "Hi {{customer_name}}, your ticket is {{ticket_id}}.",
-      { customer_name: "Alice", ticket_id: "TK-999" },
-    );
+    const result = interpolateMacro("Hi {{customer_name}}, your ticket is {{ticket_id}}.", {
+      customer_name: "Alice",
+      ticket_id: "TK-999",
+    });
     expect(result).toBe("Hi Alice, your ticket is TK-999.");
   });
 
@@ -207,18 +207,12 @@ describe("interpolateMacro", () => {
   });
 
   it("replaces all occurrences of the same variable", () => {
-    const result = interpolateMacro(
-      "{{name}} is {{name}}.",
-      { name: "Alice" },
-    );
+    const result = interpolateMacro("{{name}} is {{name}}.", { name: "Alice" });
     expect(result).toBe("Alice is Alice.");
   });
 
   it("works with a body that has no variables", () => {
-    const result = interpolateMacro(
-      FIXTURE_MACRO_NO_VARS.body,
-      { anything: "ignored" },
-    );
+    const result = interpolateMacro(FIXTURE_MACRO_NO_VARS.body, { anything: "ignored" });
     expect(result).toBe(FIXTURE_MACRO_NO_VARS.body);
   });
 
@@ -228,9 +222,7 @@ describe("interpolateMacro", () => {
       ticket_id: "TK-123",
       agent_name: "Carol",
     });
-    expect(result).toBe(
-      "Hi Bob, your ticket TK-123 is assigned to Carol.",
-    );
+    expect(result).toBe("Hi Bob, your ticket TK-123 is assigned to Carol.");
   });
 });
 
@@ -272,7 +264,14 @@ describe("searchMacros", () => {
 
   it("filters by text query in title", () => {
     const result = searchMacros(FIXTURE_MACROS, { query: "refund" });
-    expect(result.every((m) => m.title.toLowerCase().includes("refund") || m.body.toLowerCase().includes("refund") || m.tags.some(t => t.includes("refund")))).toBe(true);
+    expect(
+      result.every(
+        (m) =>
+          m.title.toLowerCase().includes("refund") ||
+          m.body.toLowerCase().includes("refund") ||
+          m.tags.some((t) => t.includes("refund")),
+      ),
+    ).toBe(true);
     expect(result.length).toBeGreaterThan(0);
   });
 
@@ -287,10 +286,7 @@ describe("searchMacros", () => {
   });
 
   it("returns empty array when no macros match the category", () => {
-    const result = searchMacros(
-      [FIXTURE_MACRO_NO_VARS],
-      { category: "billing" },
-    );
+    const result = searchMacros([FIXTURE_MACRO_NO_VARS], { category: "billing" });
     // FIXTURE_MACRO_NO_VARS is "general" so should not match
     expect(result).toEqual([]);
   });
@@ -337,18 +333,14 @@ describe("sortMacros", () => {
   it("sorts by title ascending (default direction)", () => {
     const sorted = sortMacros(FIXTURE_MACROS, "title");
     for (let i = 0; i < sorted.length - 1; i++) {
-      expect(
-        sorted[i].title.localeCompare(sorted[i + 1].title),
-      ).toBeLessThanOrEqual(0);
+      expect(sorted[i].title.localeCompare(sorted[i + 1].title)).toBeLessThanOrEqual(0);
     }
   });
 
   it("sorts by title descending", () => {
     const sorted = sortMacros(FIXTURE_MACROS, "title", "desc");
     for (let i = 0; i < sorted.length - 1; i++) {
-      expect(
-        sorted[i].title.localeCompare(sorted[i + 1].title),
-      ).toBeGreaterThanOrEqual(0);
+      expect(sorted[i].title.localeCompare(sorted[i + 1].title)).toBeGreaterThanOrEqual(0);
     }
   });
 

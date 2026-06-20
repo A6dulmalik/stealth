@@ -108,9 +108,7 @@ export function updateMacro(macro: Macro, changes: MacroUpdateInput): Macro {
     ...(changes.tags !== undefined
       ? { tags: changes.tags.map((t) => t.trim().toLowerCase()) }
       : {}),
-    ...(changes.isFavorite !== undefined
-      ? { isFavorite: changes.isFavorite }
-      : {}),
+    ...(changes.isFavorite !== undefined ? { isFavorite: changes.isFavorite } : {}),
     updatedAt: now(),
   };
 }
@@ -145,9 +143,7 @@ export function searchMacros(macros: Macro[], opts: MacroSearchOptions): Macro[]
   return macros.filter((macro) => {
     // Text search across title, body, and tags
     if (query) {
-      const haystack = [macro.title, macro.body, ...macro.tags]
-        .join(" ")
-        .toLowerCase();
+      const haystack = [macro.title, macro.body, ...macro.tags].join(" ").toLowerCase();
       if (!haystack.includes(query)) return false;
     }
 
@@ -209,9 +205,7 @@ export type MacroVariableMap = Record<string, string>;
  */
 export function interpolateMacro(body: string, variables: MacroVariableMap): string {
   return body.replace(/\{\{(\w+)\}\}/g, (match, key: string) => {
-    return Object.prototype.hasOwnProperty.call(variables, key)
-      ? variables[key]
-      : match;
+    return Object.prototype.hasOwnProperty.call(variables, key) ? variables[key] : match;
   });
 }
 
@@ -241,9 +235,7 @@ export interface MacroValidationError {
  * Validates macro create/update input.
  * Returns an array of errors; empty array means valid.
  */
-export function validateMacroInput(
-  input: Partial<MacroCreateInput>,
-): MacroValidationError[] {
+export function validateMacroInput(input: Partial<MacroCreateInput>): MacroValidationError[] {
   const errors: MacroValidationError[] = [];
 
   if (!input.title || input.title.trim().length === 0) {

@@ -8,18 +8,18 @@ verify it, and what intentionally does not exist yet.
 
 ## What this PR adds
 
-| Deliverable | Location |
-|-------------|----------|
-| Core service (pure functions) | `services/macro.service.ts` |
-| Storage service + adapter | `services/storage.service.ts` |
-| React hook | `hooks/useMacros.ts` |
-| Test fixtures | `fixtures/macros.fixture.ts` |
-| Unit tests — service layer | `tests/macro.service.test.ts` |
-| Unit tests — storage layer | `tests/storage.service.test.ts` |
-| Test plan document | `tests/TEST_PLAN.md` |
-| Setup guide | `docs/SETUP.md` |
-| OSS review notes | `docs/REVIEW_NOTES.md` ← you are here |
-| Updated README | `README.md` |
+| Deliverable                   | Location                              |
+| ----------------------------- | ------------------------------------- |
+| Core service (pure functions) | `services/macro.service.ts`           |
+| Storage service + adapter     | `services/storage.service.ts`         |
+| React hook                    | `hooks/useMacros.ts`                  |
+| Test fixtures                 | `fixtures/macros.fixture.ts`          |
+| Unit tests — service layer    | `tests/macro.service.test.ts`         |
+| Unit tests — storage layer    | `tests/storage.service.test.ts`       |
+| Test plan document            | `tests/TEST_PLAN.md`                  |
+| Setup guide                   | `docs/SETUP.md`                       |
+| OSS review notes              | `docs/REVIEW_NOTES.md` ← you are here |
+| Updated README                | `README.md`                           |
 
 **No file outside `tools/v1/team/customer-support-macro-tool/` is modified.**
 
@@ -57,6 +57,7 @@ returns outputs. This also means the service can be used outside React
 
 `StorageAdapter` is an interface with `getItem`, `setItem`, and `removeItem`.
 Tests use `createInMemoryAdapter()` instead of `localStorage`, which means:
+
 - No DOM globals needed in tests.
 - No mocking of `window.localStorage`.
 - The real browser persistence path is also covered by the same code paths.
