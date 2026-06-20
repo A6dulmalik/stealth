@@ -70,22 +70,28 @@ export function IdentityReviewTable({ rows, onChange }: Props) {
     return result;
   }, [rows, exact, fuzzy, ambiguous, none, filter, search]);
 
-  const updateRow = useCallback((id: string, patch: Partial<ImportedContactRow>) => {
-    onChange((prev) =>
-      prev.map((r) => {
-        if (r.id !== id) return r;
-        const updated = { ...r, ...patch };
-        if ("address" in patch) {
-          updated.error = validateImportAddress(patch.address ?? "");
-        }
-        return updated;
-      }),
-    );
-  }, [onChange]);
+  const updateRow = useCallback(
+    (id: string, patch: Partial<ImportedContactRow>) => {
+      onChange((prev) =>
+        prev.map((r) => {
+          if (r.id !== id) return r;
+          const updated = { ...r, ...patch };
+          if ("address" in patch) {
+            updated.error = validateImportAddress(patch.address ?? "");
+          }
+          return updated;
+        }),
+      );
+    },
+    [onChange],
+  );
 
-  const removeRow = useCallback((id: string) => {
-    onChange((prev) => prev.filter((r) => r.id !== id));
-  }, [onChange]);
+  const removeRow = useCallback(
+    (id: string) => {
+      onChange((prev) => prev.filter((r) => r.id !== id));
+    },
+    [onChange],
+  );
 
   const ambiguousCount = ambiguous.length;
   const hasAmbiguous = ambiguousCount > 0;

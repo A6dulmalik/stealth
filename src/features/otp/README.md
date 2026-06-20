@@ -22,17 +22,21 @@ This module provides automatic detection and display of one-time passwords (OTPs
 ### `detectOtp(body: string): string | null`
 
 **Input:**
+
 - `body`: Plain text email message body (no HTML)
 
 **Output:**
+
 - Returns a numeric string of 4-8 digits if a code is detected
 - Returns `null` if no code is found
 
 **Detection Strategy:**
+
 1. **Keyword-based**: Searches for keywords (`otp`, `one-time password`, `passkey`, `verification code`, `security code`, `code`, `pin`) followed by 4-8 digits within 40 characters
 2. **Standalone**: Detects 6-digit codes on their own line (fallback pattern)
 
 **Example Matches:**
+
 ```
 "Your verification code is: 123456"  → "123456"
 "OTP: 1234"                          → "1234"
@@ -41,6 +45,7 @@ This module provides automatic detection and display of one-time passwords (OTPs
 ```
 
 **Non-Matches:**
+
 - Codes with fewer than 4 or more than 8 digits
 - Numeric strings without security-related keywords (unless standalone 6-digit)
 - HTML tags or structured content (requires plain text input)
@@ -48,17 +53,22 @@ This module provides automatic detection and display of one-time passwords (OTPs
 ### `OTPCard` Component
 
 **Props:**
+
 ```typescript
-{ code: string }  // Must be 4-8 digit numeric string
+{
+  code: string;
+} // Must be 4-8 digit numeric string
 ```
 
 **Behavior:**
+
 - Splits code into individual digits for display
 - Provides one-click copy to clipboard via `navigator.clipboard.writeText()`
 - Shows visual "Copied" confirmation for 1.6 seconds
 - Animated entry with motion effects (framer-motion)
 
 **User-Facing States:**
+
 1. **Default**: "Copy code" button with copy icon
 2. **Copied**: "Copied" button with check icon (1600ms duration)
 3. **Error**: Silent failure if clipboard API unavailable (noop)
@@ -66,12 +76,14 @@ This module provides automatic detection and display of one-time passwords (OTPs
 ## Safety & Privacy Boundaries
 
 ### What This Module Does
+
 - ✅ Scans **plain text email body** for OTP patterns
 - ✅ Displays codes in a visually distinct, secure-looking UI
 - ✅ Copies codes to system clipboard on user action
 - ✅ Auto-detects codes without user configuration
 
 ### What This Module Does NOT Do
+
 - ❌ Does not send codes to external services
 - ❌ Does not store codes in browser storage or database
 - ❌ Does not auto-fill codes into external forms
@@ -95,6 +107,7 @@ This module provides automatic detection and display of one-time passwords (OTPs
 ### Security-Sensitive Behavior
 
 ⚠️ **Clipboard Access**: The module uses `navigator.clipboard.writeText()` which requires:
+
 - HTTPS or localhost context
 - User permission (browser-managed)
 - User gesture (click event)
@@ -134,7 +147,7 @@ This module provides automatic detection and display of one-time passwords (OTPs
    - [ ] Detects 4-digit code: "Your code is 1234"
    - [ ] Detects 6-digit code: "OTP: 123456"
    - [ ] Detects 8-digit code: "Verification code 12345678"
-   - [ ] Detects standalone: "\n  654321\n"
+   - [ ] Detects standalone: "\n 654321\n"
    - [ ] Does not detect 3-digit: "Code 123"
    - [ ] Does not detect 9-digit: "Code 123456789"
    - [ ] Does not detect non-OTP numbers: "Your order #123456"
@@ -197,6 +210,7 @@ bun run test:e2e
 ## Future Considerations
 
 **Out of Scope for This Module:**
+
 - Multi-language keyword support
 - OTP expiry countdown timers
 - Auto-fill into external forms
@@ -205,6 +219,7 @@ bun run test:e2e
 - Backend OTP validation
 
 **If You Need These Features:**
+
 - Propose them as separate issues with clear security/privacy analysis
 - Consider whether they belong in this module or a new feature
 - Document trust boundaries before implementation

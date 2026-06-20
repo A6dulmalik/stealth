@@ -99,7 +99,7 @@ export function parseImportCsv(raw: string, source: ImportSource = "csv"): Impor
     }
 
     const error = validateImportAddress(address);
-    
+
     // Skip completely empty/invalid rows
     if (error && !address && !name) continue;
 
@@ -145,7 +145,7 @@ function splitLine(line: string, delimiter: string): string[] {
  */
 export function deduplicateRows(rows: ImportedContactRow[]): ImportedContactRow[] {
   if (rows.length === 0) return rows;
-  
+
   const seen = new Map<string, ImportedContactRow>();
   for (const row of rows) {
     const key = row.address.trim().toLowerCase();

@@ -23,28 +23,26 @@ export function trimAddress(raw: string): string {
 function editDistance(a: string, b: string): number {
   const m = a.length;
   const n = b.length;
-  
+
   // Early exit for empty strings
   if (m === 0) return n;
   if (n === 0) return m;
-  
+
   // Swap to ensure n <= m for space optimization
   if (n > m) return editDistance(b, a);
-  
+
   // Single-row DP optimization: O(min(m,n)) space instead of O(m*n)
   let prev = Array.from({ length: n + 1 }, (_, i) => i);
-  
+
   for (let i = 1; i <= m; i++) {
     let curr = [i];
     for (let j = 1; j <= n; j++) {
       curr[j] =
-        a[i - 1] === b[j - 1]
-          ? prev[j - 1]
-          : 1 + Math.min(prev[j], curr[j - 1], prev[j - 1]);
+        a[i - 1] === b[j - 1] ? prev[j - 1] : 1 + Math.min(prev[j], curr[j - 1], prev[j - 1]);
     }
     prev = curr;
   }
-  
+
   return prev[n];
 }
 
@@ -60,17 +58,17 @@ export function nameSimilarity(a: string, b: string): number {
   const bn = b.trim().toLowerCase();
   if (!an || !bn) return 0;
   if (an === bn) return 1;
-  
+
   // Early exit: if length difference is too large, can't reach threshold
   const maxLen = Math.max(an.length, bn.length);
   const minLen = Math.min(an.length, bn.length);
   const lengthDiff = maxLen - minLen;
-  
+
   // If length difference alone would push us below threshold (0.6), skip edit distance
   if (1 - lengthDiff / maxLen < FUZZY_THRESHOLD) {
     return 0;
   }
-  
+
   const dist = editDistance(an, bn);
   return Math.max(0, 1 - dist / maxLen);
 }
