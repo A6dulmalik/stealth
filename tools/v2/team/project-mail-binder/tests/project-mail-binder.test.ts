@@ -21,18 +21,8 @@ import {
   seedProjects,
   seedMails,
 } from "../fixtures/projects";
-import {
-  isEmptyState,
-  isLoadingState,
-  isErrorState,
-  isSuccessState,
-  A11Y,
-} from "../types";
-import type {
-  BinderState,
-  BinderProject,
-  BinderMail,
-} from "../types";
+import { isEmptyState, isLoadingState, isErrorState, isSuccessState, A11Y } from "../types";
+import type { BinderState, BinderProject, BinderMail } from "../types";
 
 // ---------------------------------------------------------------------------
 // State builder shape tests
@@ -54,9 +44,7 @@ describe("State builders", () => {
   it("errorState has status 'error' with a message", () => {
     const state = errorState();
     expect(state.status).toBe("error");
-    expect(state.message).toBe(
-      "Failed to load project binders. Please try again.",
-    );
+    expect(state.message).toBe("Failed to load project binders. Please try again.");
   });
 
   it("errorState accepts a custom message", () => {
@@ -211,9 +199,7 @@ describe("Seed data shapes", () => {
 
   it("project mailCount matches actual mail count", () => {
     for (const project of seedProjects) {
-      const actualCount = seedMails.filter(
-        (m) => m.projectId === project.id,
-      ).length;
+      const actualCount = seedMails.filter((m) => m.projectId === project.id).length;
       // mailCount represents the total in the real dataset; our seed
       // subset may not cover all of them. Just verify mailCount >= actual.
       expect(project.mailCount).toBeGreaterThanOrEqual(actualCount);
@@ -298,9 +284,7 @@ describe("Empty state edge cases", () => {
   it("filtering mails by non-existent project returns empty array", () => {
     const state = successState();
     if (isSuccessState(state)) {
-      const filtered = state.mails.filter(
-        (m) => m.projectId === "non-existent",
-      );
+      const filtered = state.mails.filter((m) => m.projectId === "non-existent");
       expect(filtered).toEqual([]);
     }
   });
@@ -308,9 +292,7 @@ describe("Empty state edge cases", () => {
   it("filtering mails by valid project returns only its mails", () => {
     const state = successState();
     if (isSuccessState(state)) {
-      const mails = state.mails.filter(
-        (m) => m.projectId === "proj-onboarding",
-      );
+      const mails = state.mails.filter((m) => m.projectId === "proj-onboarding");
       expect(mails.length).toBeGreaterThan(0);
       for (const mail of mails) {
         expect(mail.projectId).toBe("proj-onboarding");

@@ -14,13 +14,7 @@ export type {
   MailId,
   ProjectColor,
 } from "./types";
-export {
-  isEmptyState,
-  isLoadingState,
-  isErrorState,
-  isSuccessState,
-  A11Y,
-} from "./types";
+export { isEmptyState, isLoadingState, isErrorState, isSuccessState, A11Y } from "./types";
 export {
   seedProjects,
   seedMails,
